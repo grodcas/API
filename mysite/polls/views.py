@@ -8,6 +8,8 @@ from rest_framework import status
 import json
 from .forms import MyForm
 from .models import Drink
+from django.views.decorators.csrf import csrf_exempt
+
 """
 <form method="post">
   {% csrf_token %}
@@ -15,6 +17,7 @@ from .models import Drink
     <button type="submit">Submit</button>
 </form>
 """
+@csrf_exempt
 def index(request):
     Latitud = Drink.objects.filter(name="LATITUD")[0].description
     Longitud = Drink.objects.filter(name="LONGITUD")[0].description
@@ -39,7 +42,7 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
-
+@csrf_exempt
 def update_variable(request):
     # Process data or update variable here
     updated_variable =  Drink.objects.filter(name="LATITUD")[0].description # Replace with your logic
@@ -48,6 +51,7 @@ def update_variable(request):
     # Return the updated data as JSON
     return JsonResponse({'updated_variable': updated_variable,'updated_variable2': updated_variable2 })
 
+@csrf_exempt
 def update_variable4(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
