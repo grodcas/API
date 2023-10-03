@@ -1,0 +1,74 @@
+<h1>DRINKS:</h1>
+<p>LATITUD:</p>    
+<p id="LatP">{{ Latitud }}</p>
+<p>LONGITUD:</p>    
+<p id="LonP">{{ Longitud }}</p>
+
+<p>POSICIÓN EN X: </p>
+<p id="variable-value2">{{ left }}</p>
+
+<p>POSICIÓN EN Y: </p>
+<p id="variable-value3">{{ right }}</p>
+<div>
+  <button type="submit" onclick="update4('Decrease')" name="Decrease"> Hacia atrás </button>
+  <button type="submit" onclick="update4('Increase')" name="Increase"> Hacia delante </button>
+</div>
+<div>
+  <button type="submit" onclick="update4('DecreaseY')" name="DecreaseY"> Hacia izquierda </button>
+  <button type="submit" onclick="update4('IncreaseY')" name="IncreaseY"> Hacia derecha </button>
+</div>
+
+
+<script>
+  // Make an AJAX request to the Django view
+  function update(){
+    fetch('update/')
+    .then(response => response.json())
+    .then(data => {
+      // Update the variable in the HTML
+      document.getElementById("LatP").textContent = data.updated_variable;
+      document.getElementById("LonP").textContent = data.updated_variable2;
+
+    });
+  }
+
+
+
+  function update4(str){
+    const csrftoken = getCookie('csrftoken'); // You'll need to implement the getCookie function
+    fetch('update4/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({ Increase: str, Decrease: str })
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Update the variable in the HTML
+      document.getElementById("variable-value2").textContent = data.Decrease;
+      document.getElementById("variable-value3").textContent = data.Increase;
+
+    });
+  }
+    
+  setInterval(update, 200);
+</script>
+
+<script>
+  function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+</script>
